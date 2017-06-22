@@ -326,7 +326,11 @@ public class Launcher extends BaseActivity
     private boolean mRotationEnabled = false;
 
     private LauncherTab mLauncherTab;
+    private final String KEY_ENABLE_PREDICTIVE_APPS = "pref_showPredictiveApps";
     private PredictiveAppsProvider mPredictiveAppsProvider;
+    private boolean mShowPredictiveApps;
+
+    private Context mContext;
 
     @Thunk void setOrientation() {
         if (mRotationEnabled) {
@@ -359,7 +363,11 @@ public class Launcher extends BaseActivity
             Trace.beginSection("Launcher-onCreate");
         }
 
-        mPredictiveAppsProvider = new PredictiveAppsProvider(this);
+        mContext = getApplicationContext();
+        mShowPredictiveApps = Utilities.getPrefs(mContext).getBoolean(KEY_ENABLE_PREDICTIVE_APPS, true);
+        if (mShowPredictiveApps) {
+             mPredictiveAppsProvider = new PredictiveAppsProvider(mContext);
+        }
 
         if (mLauncherCallbacks != null) {
             mLauncherCallbacks.preOnCreate();
@@ -446,7 +454,7 @@ public class Launcher extends BaseActivity
         // In case we are on a device with locked rotation, we should look at preferences to check
         // if the user has specifically allowed rotation.
         if (!mRotationEnabled) {
-            mRotationEnabled = Utilities.isAllowRotationPrefEnabled(getApplicationContext());
+            mRotationEnabled = Utilities.isAllowRotationPrefEnabled(mContext);
             mRotationPrefChangeHandler = new RotationPrefChangeHandler();
             mSharedPrefs.registerOnSharedPreferenceChangeListener(mRotationPrefChangeHandler);
         }
@@ -2755,7 +2763,7 @@ public class Launcher extends BaseActivity
             } else if (user == null || user.equals(Process.myUserHandle())) {
                 // Could be launching some bookkeeping activity
                 startActivity(intent, optsBundle);
-                if (isAllAppsVisible()) {
+                if (isAllAppsVisible() && mShowPredictiveApps) {
                     mPredictiveAppsProvider.updateComponentCount(intent.getComponent());
                 }
             } else {
@@ -3127,16 +3135,26 @@ public class Launcher extends BaseActivity
      * resumed.
      */
     public void tryAndUpdatePredictedApps() {
-        List<ComponentKey> apps;
-        if (mLauncherCallbacks != null) {
-            apps = mLauncherCallbacks.getPredictedApps();
+        if (!mShowPredictiveApps) {
+            if (mLauncherCallbacks != null) {
+                List<ComponentKey> apps = mLauncherCallbacks.getPredictedApps();
+                if (apps != null) {
+                    mAppsView.setPredictedApps(apps);
+                    getUserEventDispatcher().setPredictedApps(apps);
+                }
+            }
         } else {
-            apps = mPredictiveAppsProvider.getPredictions();
-            mPredictiveAppsProvider.updateTopPredictedApps();
-        }
+            List<ComponentKey> apps;
+            if (mLauncherCallbacks != null) {
+                apps = mLauncherCallbacks.getPredictedApps();
+            } else {
+                apps = mPredictiveAppsProvider.getPredictions();
+                mPredictiveAppsProvider.updateTopPredictedApps();
+            }
 
-        if (apps != null) {
-            mAppsView.setPredictedApps(apps);
+            if (apps != null) {
+                mAppsView.setPredictedApps(apps);
+            }
         }
     }
 
