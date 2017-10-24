@@ -56,14 +56,14 @@
         <SwitchPreference
             android:key="pref_legacyIcons"
             android:title="@string/legacy_icons_title"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:persistent="true"
             android:dependency="pref_adaptiveIcons" />
 
         <SwitchPreference
             android:key="pref_iconShadow"
             android:title="@string/icon_shadow_title"
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:persistent="true"
             android:dependency="pref_adaptiveIcons" />
     </PreferenceCategory>
