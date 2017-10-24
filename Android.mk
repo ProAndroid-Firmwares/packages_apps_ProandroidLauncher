@@ -50,9 +50,11 @@ LOCAL_AAPT_FLAGS := \
     --extra-packages android.support.v7.recyclerview \
 
 LOCAL_MIN_SDK_VERSION := 26
-LOCAL_PACKAGE_NAME := Launcher3
+LOCAL_PACKAGE_NAME := ProandroidLauncher
 LOCAL_PRIVILEGED_MODULE := true
 LOCAL_OVERRIDES_PACKAGES := Home Launcher2
+
+LOCAL_AAPT_FLAGS += --rename-manifest-package com.proandroid.launcher
 
 LOCAL_FULL_LIBS_MANIFEST_FILES := $(LOCAL_PATH)/AndroidManifest-common.xml
 
