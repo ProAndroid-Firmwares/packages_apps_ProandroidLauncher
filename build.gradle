@@ -2,10 +2,11 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.0'
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.2'
     }
 }
 
@@ -13,14 +14,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.protobuf'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.0'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.0'
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+        flavorDimensions "default"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -32,13 +34,15 @@ android {
 
     productFlavors {
         aosp {
-            applicationId 'com.android.launcher3'
-            testApplicationId 'com.android.launcher3.tests'
+            applicationId 'com.proandroid.launcher'
+            testApplicationId 'com.proandroid.launcher.tests'
+            dimension "default"
         }
 
         l3go {
-            applicationId 'com.android.launcher3'
-            testApplicationId 'com.android.launcher3.tests'
+            applicationId 'com.proandroid.launcher'
+            testApplicationId 'com.proandroid.launcher.tests'
+            dimension "default"
         }
     }
     sourceSets {
@@ -84,9 +88,10 @@ android {
 repositories {
     mavenCentral()
     jcenter()
+    google()
 }
 
-final String SUPPORT_LIBS_VERSION = '26.0.0-SNAPSHOT'
+final String SUPPORT_LIBS_VERSION = '27.0.0'
 dependencies {
     compile "com.android.support:support-v4:${SUPPORT_LIBS_VERSION}"
     compile "com.android.support:support-dynamic-animation:${SUPPORT_LIBS_VERSION}"
