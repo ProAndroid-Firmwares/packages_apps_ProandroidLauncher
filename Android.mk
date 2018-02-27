@@ -96,6 +96,7 @@ LOCAL_PROTO_JAVA_OUTPUT_PARAMS := enum_style=java
 LOCAL_AAPT_FLAGS := \
     --auto-add-overlay \
     --extra-packages android.support.v7.recyclerview \
+    --rename-manifest-package com.proandroid.launcher \
 
 LOCAL_SDK_VERSION := current
 LOCAL_MIN_SDK_VERSION := 21
